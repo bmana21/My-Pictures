@@ -4,10 +4,10 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>User Registration</title>
+    <title>MyPictures - Sign Up</title>
 </head>
 <body>
-<h1>User Registration</h1>
+<h1>Sign Up</h1>
 <%
     List<String> errors = (List<String>) request.getAttribute("errors");
 %>

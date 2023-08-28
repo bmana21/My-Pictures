@@ -1,8 +1,7 @@
 package com.example.mypictures.controller;
 
 import com.example.mypictures.security.UserSecurity;
-import com.example.mypictures.validator.UserValidator;
-import org.hibernate.tool.schema.internal.exec.ScriptTargetOutputToFile;
+import com.example.mypictures.validator.UserRegistrationValidator;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,12 +25,12 @@ public class RegistrationController {
 
     @PostMapping("/register")
     public String registerUser(@RequestParam String username, @RequestParam String email, @RequestParam String password, @RequestParam String firstName, @RequestParam String surname, @RequestParam String phoneNumber, Model model) {
-        List<String> errorList = UserValidator.validateInput(username, email, password, firstName, surname, phoneNumber);
+        List<String> errorList = UserRegistrationValidator.validateInput(username, email, password, firstName, surname, phoneNumber);
         if (!errorList.isEmpty()) {
             model.addAttribute("errors", errorList);
             return "registration/registrationPage";
         }
-        errorList = UserValidator.validateUser(username, email, phoneNumber, userRepository);
+        errorList = UserRegistrationValidator.validateUser(username, email, phoneNumber, userRepository);
         if (!errorList.isEmpty()) {
             model.addAttribute("errors", errorList);
             return "registration/registrationPage";

@@ -31,5 +31,8 @@
 
     <input type="submit" value="Log In">
 </form>
+<form action="${pageContext.request.contextPath}/register" method="get">
+    <button type="submit">Sign Up</button>
+</form>
 </body>
 </html>

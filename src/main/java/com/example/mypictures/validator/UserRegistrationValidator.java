@@ -12,6 +12,8 @@ public class UserRegistrationValidator {
         List<String> errorList = new ArrayList<>();
         if (username == null || username.length() < UserConstants.MIN_USERNAME_LENGTH)
             errorList.add("Enter Username With Length More Than " + (UserConstants.MIN_USERNAME_LENGTH - 1));
+        if (username != null && username.contains("_"))
+            errorList.add("Please, Do Not USE " + "'" + "_" + "'" + " In Your Username");
         if (email == null || !email.contains("@"))
             errorList.add("Enter Valid Email");
         if (password == null || password.length() < UserConstants.MIN_PASSWORD_LENGTH)

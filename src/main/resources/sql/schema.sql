@@ -6,7 +6,7 @@ USE pictures_db;
 -- Users
 CREATE TABLE IF NOT EXISTS user
 (
-    id           BIGINT PRIMARY KEY AUTO_INCREMENT,
+    userId       BIGINT PRIMARY KEY AUTO_INCREMENT,
     email        VARCHAR(255) NOT NULL,
     username     VARCHAR(255) NOT NULL,
     passwordHash VARCHAR(255) NOT NULL,
@@ -15,9 +15,22 @@ CREATE TABLE IF NOT EXISTS user
     phoneNumber  VARCHAR(255)
 );
 
+CREATE TABLE IF NOT EXISTS album
+(
+    userId   BIGINT,
+    albumId  BIGINT PRIMARY KEY AUTO_INCREMENT,
+    name     VARCHAR(512) NOT NULL,
+    saveName VARCHAR(512) NOT NULL,
+    FOREIGN KEY (userId) REFERENCES user (userId)
+);
 
--- Adding some testing data:
--- email: test@test.com     password: test
-INSERT INTO user (email, username, passwordHash, firstname, surname, phoneNumber)
-VALUES ('test@test.com', 'test', 'a94a8fe5ccb19ba61c4c0873d391e987982fbbd3', 'test_firstname',
-        'test_surname' '0123456789', '2000-09-11');
+CREATE TABLE IF NOT EXISTS photo
+(
+    userId   BIGINT,
+    albumId  BIGINT,
+    photoId  BIGINT PRIMARY KEY AUTO_INCREMENT,
+    name     VARCHAR(512) NOT NULL,
+    saveName VARCHAR(512) NOT NULL,
+    FOREIGN KEY (userId) REFERENCES user (userId),
+    FOREIGN KEY (albumId) REFERENCES album (albumId)
+);

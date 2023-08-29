@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class LogInController {
     }
 
     @PostMapping("/login")
-    public String loginUser(@RequestParam String usernameOrEmail, @RequestParam String password, Model model, HttpSession session) {
+    public String loginUser(@RequestParam String usernameOrEmail, @RequestParam String password, Model model, HttpSession session,RedirectAttributes redirectAttributes) {
         List<String> errorList = UserLoginValidator.validateInput(usernameOrEmail, password);
         if (!errorList.isEmpty()) {
             model.addAttribute("errors", errorList);
@@ -40,6 +41,7 @@ public class LogInController {
         if (user == null)
             user = userRepository.findByEmail(usernameOrEmail);
         session.setAttribute("user", user);
-        return "home/homePage";
+        redirectAttributes.addFlashAttribute("userRedirect", user);
+        return "redirect:/home";
     }
 }

@@ -12,5 +12,5 @@ public interface UserRepository extends CrudRepository<User, Long> {
 
     User findByPhoneNumber(String PhoneNumber);
 
-    User findById(long id);
+    User findByUserId(long id);
 }

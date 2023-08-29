@@ -15,9 +15,6 @@
 <h1>Welcome</h1>
 <% User user = (User) session.getAttribute("user"); %>
 <% List<Album> albums = (List<Album>) request.getAttribute("albums"); %>
-<%
-    GoogleCloudService googleCloudService = new GoogleCloudService();
-%>
 <% if (user == null) {%>
 <form action="${pageContext.request.contextPath}/login" method="get">
     <button type="submit">Log In</button>
@@ -37,7 +34,7 @@
     <input value="<%=album.getAlbumId()%>" name="albumId" style="display: none">
     <div class="album-container" onclick="this.closest('form').submit();">
         <div class="image">
-            <img src="<%=googleCloudService.getPhotoURL(album.getSaveName())%>">
+            <img src="<%=GoogleCloudService.getPhotoURL(album.getSaveName())%>">
         </div>
         <div class="text">
             <div class="name">

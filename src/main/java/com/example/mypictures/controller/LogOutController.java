@@ -9,6 +9,6 @@ public class LogOutController {
     @GetMapping("/logout")
     public String logOut(HttpSession session) {
         session.invalidate();
-        return "home/homePage";
+        return "redirect:/home";
     }
 }

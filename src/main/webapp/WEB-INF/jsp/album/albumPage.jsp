@@ -13,30 +13,34 @@
     <% User user = (User) session.getAttribute("user");
         Album album = (Album) request.getAttribute("album");
         List<Photo> photos = (List<Photo>) request.getAttribute("photos");
-        GoogleCloudService googleCloudService = new GoogleCloudService();
     %>
     <title>Album - <%=album.getName()%>
     </title>
 </head>
 <body>
-<a href="${pageContext.request.contextPath}/home" >MyPictures</a>
+<a href="${pageContext.request.contextPath}/home">MyPictures</a>
 <h2><%=album.getName()%>
 </h2>
-<%--<form action="${pageContext.request.contextPath}/newalbum" method="get">--%>
-<%--    <button type="submit">Create New Album</button>--%>
-<%--</form>--%>
 <% for (Photo photo : photos) { %>
 <div class="photo-container">
     <div class="image">
-        <img src="<%=googleCloudService.getPhotoURL(photo.getSaveName())%>">
+        <img src="<%=GoogleCloudService.getPhotoURL(photo.getSaveName())%>">
     </div>
     <div class="text">
         <div class="name">
-            <h4><%=photo.getName()%></h4>
+            <h4><%=photo.getName()%>
+            </h4>
         </div>
     </div>
 </div>
 <% } %>
-
+<form action="${pageContext.request.contextPath}/addphoto" method="post" enctype="multipart/form-data">
+    <div>
+        <label>add More Photos: </label>
+        <input type="file" name="photos" multiple>
+    </div>
+    <input type="hidden" name="albumId" value="<%= album.getAlbumId()%>">
+    <button type="submit">Upload Photos</button>
+</form>
 </body>
 </html>

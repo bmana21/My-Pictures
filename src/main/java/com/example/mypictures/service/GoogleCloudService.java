@@ -43,7 +43,7 @@ public class GoogleCloudService {
         storage.delete(blobId);
     }
 
-    public String getPhotoURL(String fileName) {
+    public static String getPhotoURL(String fileName) {
         if (fileName.equals(AlbumConstants.DEFAULT_COVER_LOCATION))
             return AlbumConstants.DEFAULT_COVER_LOCATION;
         return "https://storage.googleapis.com/" + GoogleCloudConstants.BUCKET_NAME + "/" + fileName;

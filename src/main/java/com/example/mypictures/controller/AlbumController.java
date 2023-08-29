@@ -32,10 +32,10 @@ public class AlbumController {
         if (user == null)
             return "login/loginPage";
         if (albumId == null)
-            return "home/homePage";
+            return "redirect:/home";
         Album album = albumRepository.findByAlbumId(albumId);
         if (album == null || !album.getUser().getUserId().equals(user.getUserId()))
-            return "home/homePage";
+            return "redirect:/home";
         List<Photo> photos = photoRepository.findByAlbum(album);
         if(photos == null)
             photos = new ArrayList<>();

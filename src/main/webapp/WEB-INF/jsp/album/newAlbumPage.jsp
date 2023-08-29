@@ -3,9 +3,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Multiple Photo Upload</title>
+    <title>Create New Album</title>
 </head>
 <body>
+<a href="${pageContext.request.contextPath}/home" >MyPictures</a>
 <%
     List<String> errors = (List<String>) request.getAttribute("errors");
 %>

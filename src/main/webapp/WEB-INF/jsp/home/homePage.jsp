@@ -11,6 +11,7 @@
     <title>MyPictures - Homepage</title>
 </head>
 <body>
+<a href="${pageContext.request.contextPath}/home" >MyPictures</a>
 <h1>Welcome</h1>
 <% User user = (User) session.getAttribute("user"); %>
 <% List<Album> albums = (List<Album>) request.getAttribute("albums"); %>

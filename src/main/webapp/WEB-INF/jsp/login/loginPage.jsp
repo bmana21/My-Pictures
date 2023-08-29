@@ -7,6 +7,7 @@
     <title>MyPictures - Log In</title>
 </head>
 <body>
+<a href="${pageContext.request.contextPath}/home" >MyPictures</a>
 <h1>Log In</h1>
 <%
     List<String> errors = (List<String>) request.getAttribute("errors");

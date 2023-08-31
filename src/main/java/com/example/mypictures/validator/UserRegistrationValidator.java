@@ -1,5 +1,6 @@
 package com.example.mypictures.validator;
 
+import com.example.mypictures.constant.GoogleCloudConstants;
 import com.example.mypictures.constant.UserConstants;
 import com.example.mypictures.repository.UserRepository;
 
@@ -12,8 +13,8 @@ public class UserRegistrationValidator {
         List<String> errorList = new ArrayList<>();
         if (username == null || username.length() < UserConstants.MIN_USERNAME_LENGTH)
             errorList.add("Enter Username With Length More Than " + (UserConstants.MIN_USERNAME_LENGTH - 1));
-        if (username != null && username.contains("_"))
-            errorList.add("Please, Do Not USE " + "'" + "_" + "'" + " In Your Username");
+        if (username != null && username.contains(GoogleCloudConstants.SPLIT))
+            errorList.add("Please, Do Not USE " + "'" + GoogleCloudConstants.SPLIT + "'" + " In Your Username");
         if (email == null || !email.contains("@"))
             errorList.add("Enter Valid Email");
         if (password == null || password.length() < UserConstants.MIN_PASSWORD_LENGTH)

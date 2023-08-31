@@ -37,10 +37,12 @@ public class AlbumController {
         if (album == null || !album.getUser().getUserId().equals(user.getUserId()))
             return "redirect:/home";
         List<Photo> photos = photoRepository.findByAlbum(album);
-        if(photos == null)
+        if (photos == null)
             photos = new ArrayList<>();
+        List<Album> albums = albumRepository.findByUser(user);
         model.addAttribute("album", album);
         model.addAttribute("photos", photos);
+        model.addAttribute("albums", albums);
         return "album/albumPage";
     }
 

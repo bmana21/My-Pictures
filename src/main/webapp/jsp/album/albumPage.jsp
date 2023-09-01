@@ -32,6 +32,13 @@
                 <div class="photo">
                     <img src="<%=GoogleCloudService.getPhotoURL(photo.getSaveName())%>">
                 </div>
+                <div class="overlay"></div>
+                <div class="delete">
+                    <% String link = "/deletephoto?albumId="+album.getAlbumId()+"&photoId="+photo.getPhotoId(); %>
+                    <a href="<%=link%>">Delete</a>
+                </div>
+                <div class="download"><a href="<%=GoogleCloudService.getPhotoURL(photo.getSaveName())%>"> Download </a>
+                </div>
             </div>
             <% } %>
 

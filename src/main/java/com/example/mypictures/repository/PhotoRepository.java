@@ -16,4 +16,8 @@ public interface PhotoRepository extends CrudRepository<Photo, Long> {
 
     Photo findByAlbumAndUserAndName(Album album, User user, String name);
 
+    Photo findByAlbumAndPhotoId(Album album, Long photoId);
+
+    void deleteByPhotoId(Long photoId);
+
 }

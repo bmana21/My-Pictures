@@ -28,6 +28,16 @@ public class GoogleCloudService {
         this.storage = options.getService();
     }
 
+    public void uploadPhotoBytes(String fileName, byte[] file) {
+        BlobId blobId = BlobId.of(GoogleCloudConstants.BUCKET_NAME, fileName);
+        BlobInfo blobInfo = BlobInfo.newBuilder(blobId).build();
+        try {
+            storage.create(blobInfo, file);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void uploadPhoto(String fileName, MultipartFile file) {
         BlobId blobId = BlobId.of(GoogleCloudConstants.BUCKET_NAME, fileName);
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId).build();

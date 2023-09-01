@@ -12,4 +12,6 @@ public interface AlbumRepository extends CrudRepository<Album, Long> {
     Album findByUserAndName(User user, String name);
 
     List<Album> findByUser(User user);
+
+    Album findByUserAndSaveName(User user, String saveName);
 }

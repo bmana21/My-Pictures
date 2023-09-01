@@ -9,6 +9,7 @@ import com.example.mypictures.repository.AlbumRepository;
 import com.example.mypictures.repository.PhotoRepository;
 import com.example.mypictures.repository.UserRepository;
 import com.example.mypictures.service.GoogleCloudService;
+import com.example.mypictures.validator.PhotoValidator;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,6 +32,7 @@ public class NewAlbumController {
     @Autowired
     private AlbumRepository albumRepository;
 
+
     @Autowired
     private GoogleCloudService googleCloudService;
 
@@ -42,7 +44,7 @@ public class NewAlbumController {
     }
 
     @PostMapping("/newalbum")
-    public String addNewAlbum(@RequestParam String name, @RequestParam("albumCover") MultipartFile albumCover, @RequestParam("photos") MultipartFile[] photos, HttpSession session, Model model) {
+    public String addNewAlbum(@RequestParam String name, @RequestParam("albumCover") MultipartFile albumCover, @RequestParam("photos") MultipartFile[] photos, HttpSession session, Model model) throws IOException {
         User user = (User) session.getAttribute("user");
         if (user == null)
             return "login/loginPage";
@@ -64,7 +66,8 @@ public class NewAlbumController {
         if (albumCover == null || albumCover.isEmpty())
             album = new Album(user, name, AlbumConstants.DEFAULT_COVER_LOCATION);
         else {
-            String fileName = AlbumConstants.COVER_PREFIX + user.getUsername() + GoogleCloudConstants.SPLIT + user.getPasswordHash() + GoogleCloudConstants.SPLIT + name + GoogleCloudConstants.SPLIT + albumCover.getOriginalFilename();
+            String originalFileName = PhotoValidator.getOriginalFileName(albumCover.getOriginalFilename(), user, null, albumRepository, photoRepository, true);
+            String fileName = AlbumConstants.COVER_PREFIX + user.getUsername() + GoogleCloudConstants.SPLIT + user.getPasswordHash() + GoogleCloudConstants.SPLIT + name + GoogleCloudConstants.SPLIT + originalFileName;
             googleCloudService.uploadPhoto(fileName, albumCover);
             album = new Album(user, name, fileName);
         }
@@ -72,9 +75,14 @@ public class NewAlbumController {
         if (!(photos == null || photos.length == 0)) {
             for (MultipartFile photo : photos) {
                 if (!photo.isEmpty()) {
-                    String fileName = AlbumConstants.PHOTO_PREFIX + user.getUsername() + GoogleCloudConstants.SPLIT + user.getPasswordHash() + GoogleCloudConstants.SPLIT + name + GoogleCloudConstants.SPLIT + photo.getOriginalFilename();
-                    googleCloudService.uploadPhoto(fileName, photo);
-                    Photo photo1 = new Photo(user, album, photo.getOriginalFilename(), fileName);
+                    String originalFileName = PhotoValidator.getOriginalFileName(photo.getOriginalFilename(), user, album, albumRepository, photoRepository, false);
+                    String fileName = AlbumConstants.PHOTO_PREFIX + user.getUsername() + GoogleCloudConstants.SPLIT + user.getPasswordHash() + GoogleCloudConstants.SPLIT + name + GoogleCloudConstants.SPLIT + originalFileName;
+                    if (PhotoValidator.photoIsLarge(photo)) {
+                        fileName = PhotoValidator.changeToJPNG(fileName);
+                        originalFileName = PhotoValidator.changeToJPNG(originalFileName);
+                        googleCloudService.uploadPhotoBytes(fileName, PhotoValidator.scalePhoto(photo));
+                    } else googleCloudService.uploadPhoto(fileName, photo);
+                    Photo photo1 = new Photo(user, album, originalFileName, fileName);
                     photoRepository.save(photo1);
                 }
             }

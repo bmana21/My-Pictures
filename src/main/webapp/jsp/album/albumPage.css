@@ -82,6 +82,74 @@ html, body {
     opacity: 0;
     transition: opacity .35s ease;
 }
+#previewPhotosContainer {
+    display: flex;
+    background-color: black;
+    height: 300px;
+    width: 97%;
+    overflow-x: auto;
+    padding: 8px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    margin-top: 5px;
+    white-space: nowrap;
+    overflow-y: hidden;
+}
+
+#previewPhotosContainer .photoContainer {
+    position: relative;
+    max-height: 100%;
+    margin: 5px;
+    max-width: none;
+    border-radius: 10px;
+}
+
+#previewPhotosContainer .photoContainer img{
+    max-height: 100%;
+    margin: 5px;
+    max-width: none;
+    border-radius: 10px;
+}
+
+#previewPhotosContainer .photoContainer .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 105%;
+    background: rgba(0, 0, 0, 0);
+    transition: background 0.5s ease;
+}
+#previewPhotosContainer .photoContainer:hover .overlay {
+    display: block;
+    background: rgba(0, 0, 0, .3);
+}
+
+.photoContainer .delete {
+    position: absolute;
+    width: 50px;
+    left: 48%;
+    top: 20%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    opacity: 0;
+    transition: opacity .35s ease;
+}
+
+.photoContainer .delete a {
+    background-color: rgba(0, 0, 0, .6);;
+    text-decoration: none;
+    width: 100px;
+    padding: 5px 5px;
+    text-align: center;
+    color: white;
+    border: solid 2px white;
+    z-index: 1;
+}
+
+.photoContainer:hover .delete {
+    opacity: 1;
+}
 
 .photo-container .delete {
     position: absolute;

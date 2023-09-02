@@ -6,6 +6,7 @@
     <meta charset="UTF-8">
     <title>MyPictures - Log In</title>
     <link rel="stylesheet" type="text/css" href="/jsp/login/loginPage.css">
+    <link rel="stylesheet" type="text/css" href="/General CSS/ScrollBar.css">
 </head>
 <body>
 <div class="wrapper">

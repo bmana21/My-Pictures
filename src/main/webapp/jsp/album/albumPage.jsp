@@ -58,6 +58,35 @@
             </form>
 
         </div>
+        <div class="delete-album">
+            <button onclick="openPopup()" class="delete-album-button"> Delete Album</button>
+            <div id="deletePopUp" class="delete-popUp">
+                <div class="delete-popUp-content">
+                    <form action="${pageContext.request.contextPath}/deletealbum" method="get">
+                        <p>Are you sure you want to delete this album? Note that all the photos from this album will be
+                            deleted, too.</p>
+                        <input type="hidden" name="albumId" value="<%= album.getAlbumId()%>">
+                        <div class="delete-popUp-buttons">
+                            <button type="button" onclick="closePopup()">Cancel</button>
+                            <button type="submit">Delete</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+            <script>
+                function openPopup() {
+                    var modal = document.getElementById("deletePopUp");
+                    modal.style.display = "block";
+                }
+
+                function closePopup() {
+                    var modal = document.getElementById("deletePopUp");
+                    modal.style.display = "none";
+                }
+            </script>
+
+        </div>
     </div>
     <div class="sidebar-wrapper">
         <div class="sidebar">

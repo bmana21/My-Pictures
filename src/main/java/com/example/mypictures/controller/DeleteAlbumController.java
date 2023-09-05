@@ -1,5 +1,6 @@
 package com.example.mypictures.controller;
 
+import com.example.mypictures.constant.AlbumConstants;
 import com.example.mypictures.cookie.RememberMeCookie;
 import com.example.mypictures.entity.Album;
 import com.example.mypictures.entity.Photo;
@@ -17,8 +18,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+import java.util.Objects;
+
 @Controller
-public class DeletePhotoController {
+public class DeleteAlbumController {
     @Autowired
     private PhotoRepository photoRepository;
     @Autowired
@@ -30,9 +34,9 @@ public class DeletePhotoController {
     @Autowired
     private RememberMeCookie rememberMeCookie;
 
-    @RequestMapping("/deletephoto")
+    @RequestMapping("/deletealbum")
     @Transactional
-    public String deletePhoto(@RequestParam(name = "albumId") Long albumId, @RequestParam(name = "photoId") Long photoId, HttpSession session, HttpServletRequest request) throws Exception {
+    public String deleteAlbum(@RequestParam(name = "albumId") Long albumId, HttpSession session, HttpServletRequest request) throws Exception {
         User user = (User) session.getAttribute("user");
         if (user == null) {
             user = userRepository.findByRememberMeToken(rememberMeCookie.getToken(request));
@@ -43,11 +47,15 @@ public class DeletePhotoController {
         Album album = albumRepository.findByAlbumIdAndUser(albumId, user);
         if (album == null)
             return "redirect:/home";
-        Photo photo = photoRepository.findByAlbumAndPhotoId(album, photoId);
-        if (photo == null)
-            return "redirect:/home";
-        googleCloudService.deletePhoto(photo.getSaveName());
-        photoRepository.deleteByPhotoId(photoId);
-        return "redirect:/album?albumId=" + album.getAlbumId();
+
+        List<Photo> photos = photoRepository.findByAlbum(album);
+        for(Photo photo : photos){
+            googleCloudService.deletePhoto(photo.getSaveName());
+            photoRepository.deleteByPhotoId(photo.getPhotoId());
+        }
+        if(!Objects.equals(album.getSaveName(), AlbumConstants.DEFAULT_COVER_LOCATION))
+            googleCloudService.deletePhoto(album.getSaveName());
+        albumRepository.deleteByAlbumId(albumId);
+        return "redirect:/home";
     }
 }

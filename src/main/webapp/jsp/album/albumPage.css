@@ -280,6 +280,60 @@ html, body {
     background: #cccccc;
 }
 
+.delete-popUp {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+.delete-popUp-content p{
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.delete-popUp-buttons{
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+
+}
+
+.delete-popUp-buttons button,
+.delete-album-button {
+    background-color: black;
+    color: white;
+    border-radius: 10px;
+    font-family: Arial, sans-serif;
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 7px;
+    display: flex;
+    justify-content: space-between;
+
+}
+
+.delete-popUp-buttons button:hover,
+.delete-album-button:hover {
+    background-color: #555;
+}
+
+.delete-popUp-content {
+    position: absolute;
+    border-radius: 10px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border: 1px solid #ccc;
+}
+
+
 .footer {
     position: absolute;
     bottom: -200px;

@@ -51,28 +51,27 @@
                     <input type="file" name="photos" id="photos" multiple onchange="previewFiles()">
                 </div>
                 <input type="hidden" name="albumId" value="<%= album.getAlbumId()%>">
-                <p>Preview of your upload photos: </p>
-                <div id="previewPhotosContainer">
+                <div id="just-previews">
+                    <p>Preview of your upload photos: </p>
+                    <div id="previewPhotosContainer">
+                    </div>
                 </div>
                 <button type="submit">Upload Photos</button>
             </form>
 
         </div>
-        <div class="delete-album">
-            <button onclick="openPopup()" class="delete-album-button"> Delete Album</button>
-            <div id="deletePopUp" class="delete-popUp">
-                <div class="delete-popUp-content">
-                    <form action="${pageContext.request.contextPath}/deletealbum" method="get">
-                        <p>Are you sure you want to delete this album? Note that all the photos from this album will be
-                            deleted, too.</p>
-                        <input type="hidden" name="albumId" value="<%= album.getAlbumId()%>">
-                        <div class="delete-popUp-buttons">
-                            <button type="button" onclick="closePopup()">Cancel</button>
-                            <button type="submit">Delete</button>
-                        </div>
-                    </form>
-
-                </div>
+        <button onclick="openPopup()" class="delete-album-button"> Delete Album</button>
+        <div id="deletePopUp" class="delete-popUp">
+            <div class="delete-popUp-content">
+                <form action="${pageContext.request.contextPath}/deletealbum" method="get">
+                    <p>Are you sure you want to delete this album? Note that all the photos from this album will be
+                        deleted, too.</p>
+                    <input type="hidden" name="albumId" value="<%= album.getAlbumId()%>">
+                    <div class="delete-popUp-buttons">
+                        <button type="button" onclick="closePopup()">Cancel</button>
+                        <button type="submit">Delete</button>
+                    </div>
+                </form>
             </div>
             <script>
                 function openPopup() {
@@ -150,14 +149,16 @@
             sidebar.style.marginTop = headerHeight - scrollTop + 'px';
         }
     });
-
+    var previews = document.getElementById("just-previews");
+    previews.style.display = 'none';
     function previewFiles() {
         var fileInput = document.getElementById('photos');
         var imagePreview = document.getElementById('previewPhotosContainer');
 
-        imagePreview.innerHTML = '';
 
+        imagePreview.innerHTML = '';
         if (fileInput.files && fileInput.files.length > 0) {
+            previews.style.display = 'block';
             for (var i = 0; i < fileInput.files.length; i++) {
                 var reader = new FileReader();
                 reader.onload = (function (index) {
@@ -189,6 +190,7 @@
                 reader.readAsDataURL(fileInput.files[i]);
             }
         }
+        else previews.style.display = 'none';
     }
 
     function removePhoto(index) {

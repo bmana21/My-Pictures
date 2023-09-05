@@ -1,8 +1,11 @@
 package com.example.mypictures.controller;
 
+import com.example.mypictures.cookie.RememberMeCookie;
 import com.example.mypictures.entity.Album;
 import com.example.mypictures.entity.User;
 import com.example.mypictures.repository.AlbumRepository;
+import com.example.mypictures.repository.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,13 +22,20 @@ import java.util.List;
 public class HomePageController {
     @Autowired
     private AlbumRepository albumRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private RememberMeCookie rememberMeCookie;
 
     @RequestMapping("/home")
-    public String homePage(HttpSession session, Model model) {
+    public String homePage(HttpSession session, Model model, HttpServletRequest request) {
         User user = (User) session.getAttribute("user");
         if (user == null)
             user = (User) model.getAttribute("userRedirect");
+        if (user == null)
+            user = userRepository.findByRememberMeToken(rememberMeCookie.getToken(request));
         if (user != null) {
+            session.setAttribute("user", user);
             List<Album> albums = albumRepository.findByUser(user);
             if (albums == null)
                 albums = new ArrayList<>();

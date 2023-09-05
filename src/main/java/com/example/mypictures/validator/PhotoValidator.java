@@ -20,6 +20,10 @@ import java.io.ByteArrayOutputStream;
 
 public class PhotoValidator {
 
+    public static String validateName(String name){
+        return name.replaceAll("\\?", "Q");
+    }
+
     public static boolean photoIsLarge(MultipartFile photo) {
         return (photo.getSize() / 1024) > PhotoConstants.PHOTO_SIZE;
     }
@@ -75,6 +79,7 @@ public class PhotoValidator {
 
     public static String getOriginalFileName(String originalFileName, User user, Album album, AlbumRepository albumRepository, PhotoRepository photoRepository, boolean isAlbum) {
         String save = originalFileName;
+        originalFileName = validateName(originalFileName);
         int index = 1;
         if (!isAlbum) {
             while (photoRepository.findByAlbumAndUserAndName(album, user, originalFileName) != null) {

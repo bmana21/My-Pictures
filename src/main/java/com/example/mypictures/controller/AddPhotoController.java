@@ -2,13 +2,16 @@ package com.example.mypictures.controller;
 
 import com.example.mypictures.constant.AlbumConstants;
 import com.example.mypictures.constant.GoogleCloudConstants;
+import com.example.mypictures.cookie.RememberMeCookie;
 import com.example.mypictures.entity.Album;
 import com.example.mypictures.entity.Photo;
 import com.example.mypictures.entity.User;
 import com.example.mypictures.repository.AlbumRepository;
 import com.example.mypictures.repository.PhotoRepository;
+import com.example.mypictures.repository.UserRepository;
 import com.example.mypictures.service.GoogleCloudService;
 import com.example.mypictures.validator.PhotoValidator;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,25 +25,33 @@ import java.io.IOException;
 @Controller
 public class AddPhotoController {
     @Autowired
+    private UserRepository userRepository;
+    @Autowired
     private PhotoRepository photoRepository;
     @Autowired
     private AlbumRepository albumRepository;
     @Autowired
     private GoogleCloudService googleCloudService;
+    @Autowired
+    private RememberMeCookie rememberMeCookie;
 
     @RequestMapping("/addphoto")
-    public String addPhoto(@RequestParam Long albumId, @RequestParam("photos") MultipartFile[] photos, HttpSession session) throws IOException {
+    public String addPhoto(@RequestParam Long albumId, @RequestParam("photos") MultipartFile[] photos, HttpSession session, HttpServletRequest request) throws IOException {
         User user = (User) session.getAttribute("user");
-        if (user == null)
-            return "login/loginPage";
-        Album album = albumRepository.findByAlbumId(albumId);
+        if (user == null) {
+            user = userRepository.findByRememberMeToken(rememberMeCookie.getToken(request));
+            session.setAttribute("user", user);
+            if (user == null)
+                return "login/loginPage";
+        }
+        Album album = albumRepository.findByAlbumIdAndUser(albumId, user);
         if (album == null)
             return "redirect:/home";
         if (!(photos == null || photos.length == 0)) {
             for (MultipartFile photo : photos) {
                 if (!photo.isEmpty()) {
                     String originalFileName = PhotoValidator.getOriginalFileName(photo.getOriginalFilename(), user, album, albumRepository, photoRepository, false);
-                    String fileName = AlbumConstants.PHOTO_PREFIX + user.getUsername() + GoogleCloudConstants.SPLIT + user.getPasswordHash() + GoogleCloudConstants.SPLIT + album.getName() + GoogleCloudConstants.SPLIT + originalFileName;
+                    String fileName = AlbumConstants.PHOTO_PREFIX + user.getUsername() + GoogleCloudConstants.SPLIT + album.getAlbumToken() + GoogleCloudConstants.SPLIT + album.getName() + GoogleCloudConstants.SPLIT + originalFileName;
                     if (PhotoValidator.photoIsLarge(photo)) {
                         fileName = PhotoValidator.changeToJPNG(fileName);
                         originalFileName = PhotoValidator.changeToJPNG(originalFileName);

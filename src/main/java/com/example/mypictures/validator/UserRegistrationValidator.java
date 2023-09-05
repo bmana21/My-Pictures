@@ -13,8 +13,14 @@ public class UserRegistrationValidator {
         List<String> errorList = new ArrayList<>();
         if (username == null || username.length() < UserConstants.MIN_USERNAME_LENGTH)
             errorList.add("Enter Username With Length More Than " + (UserConstants.MIN_USERNAME_LENGTH - 1));
-        if (username != null && username.contains(GoogleCloudConstants.SPLIT))
-            errorList.add("Please, Do Not USE " + "'" + GoogleCloudConstants.SPLIT + "'" + " In Your Username");
+        if (username != null) {
+            for (int k = 0; k < username.length(); k++) {
+                if (!UserConstants.ALLOWED_CHARS.contains(String.valueOf(username.charAt(k)))) {
+                    errorList.add("For Username, You can only use a-z, A-Z, 0-9, Underscore (_), Period (.) and Hyphen (-)");
+                    break;
+                }
+            }
+        }
         if (email == null || !email.contains("@"))
             errorList.add("Enter Valid Email");
         if (password == null || password.length() < UserConstants.MIN_PASSWORD_LENGTH)

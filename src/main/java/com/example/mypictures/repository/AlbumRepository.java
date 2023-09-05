@@ -7,7 +7,7 @@ import com.example.mypictures.entity.User;
 import java.util.List;
 
 public interface AlbumRepository extends CrudRepository<Album, Long> {
-    Album findByAlbumId(Long albumId);
+    Album findByAlbumIdAndUser(Long albumId, User user);
 
     Album findByUserAndName(User user, String name);
 

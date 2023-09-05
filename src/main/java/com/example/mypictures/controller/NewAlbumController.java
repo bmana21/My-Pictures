@@ -2,14 +2,17 @@ package com.example.mypictures.controller;
 
 import com.example.mypictures.constant.AlbumConstants;
 import com.example.mypictures.constant.GoogleCloudConstants;
+import com.example.mypictures.cookie.RememberMeCookie;
 import com.example.mypictures.entity.Album;
 import com.example.mypictures.entity.Photo;
 import com.example.mypictures.entity.User;
 import com.example.mypictures.repository.AlbumRepository;
 import com.example.mypictures.repository.PhotoRepository;
 import com.example.mypictures.repository.UserRepository;
+import com.example.mypictures.security.TokenGenerator;
 import com.example.mypictures.service.GoogleCloudService;
 import com.example.mypictures.validator.PhotoValidator;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,23 +34,31 @@ public class NewAlbumController {
 
     @Autowired
     private AlbumRepository albumRepository;
-
-
+    @Autowired
+    private UserRepository userRepository;
     @Autowired
     private GoogleCloudService googleCloudService;
+    @Autowired
+    private RememberMeCookie rememberMeCookie;
 
     @GetMapping("/newalbum")
-    public String newAlbumPage(HttpSession session) {
+    public String newAlbumPage(HttpSession session, HttpServletRequest request) {
         if (session.getAttribute("user") == null)
             return "login/loginPage";
-        else return "album/newAlbumPage";
+        if (userRepository.findByRememberMeToken(rememberMeCookie.getToken(request)) == null)
+            return "login/loginPage";
+        return "album/newAlbumPage";
     }
 
     @PostMapping("/newalbum")
-    public String addNewAlbum(@RequestParam String name, @RequestParam("albumCover") MultipartFile albumCover, @RequestParam("photos") MultipartFile[] photos, HttpSession session, Model model) throws IOException {
+    public String addNewAlbum(@RequestParam String name, @RequestParam("albumCover") MultipartFile albumCover, @RequestParam("photos") MultipartFile[] photos, HttpSession session, Model model, HttpServletRequest request) throws IOException {
         User user = (User) session.getAttribute("user");
-        if (user == null)
-            return "login/loginPage";
+        if (user == null) {
+            user = userRepository.findByRememberMeToken(rememberMeCookie.getToken(request));
+            session.setAttribute("user", user);
+            if (user == null)
+                return "login/loginPage";
+        }
         List<String> errorList = new ArrayList<>();
 
         if (name == null || name.isEmpty()) {
@@ -63,20 +74,22 @@ public class NewAlbumController {
         }
 
         Album album;
+        name = PhotoValidator.validateName(name);
+        String token = TokenGenerator.generateToken(name);
         if (albumCover == null || albumCover.isEmpty())
-            album = new Album(user, name, AlbumConstants.DEFAULT_COVER_LOCATION);
+            album = new Album(user, name, AlbumConstants.DEFAULT_COVER_LOCATION, token);
         else {
             String originalFileName = PhotoValidator.getOriginalFileName(albumCover.getOriginalFilename(), user, null, albumRepository, photoRepository, true);
-            String fileName = AlbumConstants.COVER_PREFIX + user.getUsername() + GoogleCloudConstants.SPLIT + user.getPasswordHash() + GoogleCloudConstants.SPLIT + name + GoogleCloudConstants.SPLIT + originalFileName;
+            String fileName = AlbumConstants.COVER_PREFIX + user.getUsername() + GoogleCloudConstants.SPLIT + token + GoogleCloudConstants.SPLIT + name + GoogleCloudConstants.SPLIT + originalFileName;
             googleCloudService.uploadPhoto(fileName, albumCover);
-            album = new Album(user, name, fileName);
+            album = new Album(user, name, fileName, token);
         }
         albumRepository.save(album);
         if (!(photos == null || photos.length == 0)) {
             for (MultipartFile photo : photos) {
                 if (!photo.isEmpty()) {
                     String originalFileName = PhotoValidator.getOriginalFileName(photo.getOriginalFilename(), user, album, albumRepository, photoRepository, false);
-                    String fileName = AlbumConstants.PHOTO_PREFIX + user.getUsername() + GoogleCloudConstants.SPLIT + user.getPasswordHash() + GoogleCloudConstants.SPLIT + name + GoogleCloudConstants.SPLIT + originalFileName;
+                    String fileName = AlbumConstants.PHOTO_PREFIX + user.getUsername() + GoogleCloudConstants.SPLIT + token + GoogleCloudConstants.SPLIT + name + GoogleCloudConstants.SPLIT + originalFileName;
                     if (PhotoValidator.photoIsLarge(photo)) {
                         fileName = PhotoValidator.changeToJPNG(fileName);
                         originalFileName = PhotoValidator.changeToJPNG(originalFileName);

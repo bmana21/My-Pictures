@@ -6,21 +6,23 @@ USE pictures_db;
 -- Users
 CREATE TABLE IF NOT EXISTS user
 (
-    userId       BIGINT PRIMARY KEY AUTO_INCREMENT,
-    email        VARCHAR(255) NOT NULL,
-    username     VARCHAR(255) NOT NULL,
-    passwordHash VARCHAR(255) NOT NULL,
-    firstname    VARCHAR(255) NOT NULL,
-    surname      VARCHAR(255) NOT NULL,
-    phoneNumber  VARCHAR(255)
+    userId          BIGINT PRIMARY KEY AUTO_INCREMENT,
+    email           VARCHAR(255) NOT NULL,
+    username        VARCHAR(255) NOT NULL,
+    passwordHash    VARCHAR(255) NOT NULL,
+    firstname       VARCHAR(255) NOT NULL,
+    surname         VARCHAR(255) NOT NULL,
+    phoneNumber     VARCHAR(255),
+    rememberMeToken VARCHAR(255)
 );
 
 CREATE TABLE IF NOT EXISTS album
 (
-    userId   BIGINT,
-    albumId  BIGINT PRIMARY KEY AUTO_INCREMENT,
-    name     VARCHAR(512) NOT NULL,
-    saveName VARCHAR(512) NOT NULL,
+    userId     BIGINT,
+    albumId    BIGINT PRIMARY KEY AUTO_INCREMENT,
+    albumToken VARCHAR(255) NOT NULL,
+    name       VARCHAR(512) NOT NULL,
+    saveName   VARCHAR(512) NOT NULL,
     FOREIGN KEY (userId) REFERENCES user (userId)
 );
 

@@ -1,11 +1,14 @@
 package com.example.mypictures.controller;
 
+import com.example.mypictures.cookie.RememberMeCookie;
 import com.example.mypictures.entity.Album;
 import com.example.mypictures.entity.Photo;
 import com.example.mypictures.entity.User;
 import com.example.mypictures.repository.AlbumRepository;
 import com.example.mypictures.repository.PhotoRepository;
+import com.example.mypictures.repository.UserRepository;
 import com.example.mypictures.service.GoogleCloudService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,14 +25,22 @@ public class DeletePhotoController {
     private AlbumRepository albumRepository;
     @Autowired
     private GoogleCloudService googleCloudService;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private RememberMeCookie rememberMeCookie;
 
     @RequestMapping("/deletephoto")
     @Transactional
-    public String deletePhoto(@RequestParam(name = "albumId") Long albumId, @RequestParam(name = "photoId") Long photoId, HttpSession session, Model model) throws Exception {
+    public String deletePhoto(@RequestParam(name = "albumId") Long albumId, @RequestParam(name = "photoId") Long photoId, HttpSession session, Model model, HttpServletRequest request) throws Exception {
         User user = (User) session.getAttribute("user");
-        if (user == null)
-            return "login/loginPage";
-        Album album = albumRepository.findByAlbumId(albumId);
+        if (user == null) {
+            user = userRepository.findByRememberMeToken(rememberMeCookie.getToken(request));
+            session.setAttribute("user", user);
+            if (user == null)
+                return "login/loginPage";
+        }
+        Album album = albumRepository.findByAlbumIdAndUser(albumId, user);
         if (album == null)
             return "redirect:/home";
         Photo photo = photoRepository.findByAlbumAndPhotoId(album, photoId);

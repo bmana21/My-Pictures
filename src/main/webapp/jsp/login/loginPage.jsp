@@ -34,9 +34,11 @@
 
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" required placeholder="Password"><br>
-
-
             <input type="submit" value="Log In">
+            <div class="remember-me">
+            <input type="checkbox" id="remember-me" name="rememberMe">
+            <label for="remember-me">Remember Me For A Month</label>
+        </div>
         </form>
         <form action="${pageContext.request.contextPath}/register" method="get">
             <button type="submit">Sign Up</button>

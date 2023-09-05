@@ -13,4 +13,7 @@ public interface UserRepository extends CrudRepository<User, Long> {
     User findByPhoneNumber(String PhoneNumber);
 
     User findByUserId(long id);
+
+    User findByRememberMeToken(String rememberMeToken);
+
 }

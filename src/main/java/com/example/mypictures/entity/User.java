@@ -13,6 +13,18 @@ public class User {
     private String username, passwordHash, email;
     private String firstname, surname;
     private String phoneNumber;
+    private String rememberMeToken;
+
+    public String getRememberMeToken() {
+        return rememberMeToken;
+    }
+
+    public void setRememberMeToken(String rememberMeToken) {
+        this.rememberMeToken = rememberMeToken;
+    }
+
+
+
 
     public User(String username, String passwordHash, String email, String firstname, String surname, String phoneNumber) {
         this.username = username;

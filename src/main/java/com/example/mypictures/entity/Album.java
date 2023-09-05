@@ -22,6 +22,16 @@ public class Album {
 
     private String saveName;
 
+    public String getAlbumToken() {
+        return albumToken;
+    }
+
+    public void setAlbumToken(String albumToken) {
+        this.albumToken = albumToken;
+    }
+
+    private String albumToken;
+
     public String getName() {
         return name;
     }
@@ -34,10 +44,11 @@ public class Album {
     protected Album() {
     }
 
-    public Album(User user, String name, String saveName) {
+    public Album(User user, String name, String saveName, String albumToken) {
         this.user = user;
         this.name = name;
         this.saveName = saveName;
+        this.albumToken = albumToken;
     }
 
     public Long getAlbumId() {

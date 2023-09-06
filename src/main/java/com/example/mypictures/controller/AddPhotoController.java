@@ -40,9 +40,9 @@ public class AddPhotoController {
         User user = (User) session.getAttribute("user");
         if (user == null) {
             user = userRepository.findByRememberMeToken(rememberMeCookie.getToken(request));
-            session.setAttribute("user", user);
             if (user == null)
                 return "login/loginPage";
+            session.setAttribute("user", user);
         }
         Album album = albumRepository.findByAlbumIdAndUser(albumId, user);
         if (album == null)

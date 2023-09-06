@@ -43,10 +43,10 @@ public class NewAlbumController {
 
     @GetMapping("/newalbum")
     public String newAlbumPage(HttpSession session, HttpServletRequest request) {
-        if (session.getAttribute("user") == null)
-            return "login/loginPage";
-        if (userRepository.findByRememberMeToken(rememberMeCookie.getToken(request)) == null)
-            return "login/loginPage";
+        if (session.getAttribute("user") == null) {
+            if (userRepository.findByRememberMeToken(rememberMeCookie.getToken(request)) == null)
+                return "login/loginPage";
+        }
         return "album/newAlbumPage";
     }
 
@@ -55,9 +55,9 @@ public class NewAlbumController {
         User user = (User) session.getAttribute("user");
         if (user == null) {
             user = userRepository.findByRememberMeToken(rememberMeCookie.getToken(request));
-            session.setAttribute("user", user);
             if (user == null)
                 return "login/loginPage";
+            session.setAttribute("user", user);
         }
         List<String> errorList = new ArrayList<>();
 

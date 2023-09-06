@@ -7,12 +7,15 @@
     <title>MyPictures - Log In</title>
     <link rel="stylesheet" type="text/css" href="/jsp/login/loginPage.css">
     <link rel="stylesheet" type="text/css" href="/General CSS/ScrollBar.css">
+    <link rel="icon" type="image/png" href="/images/icon.png">
 </head>
 <body>
 <div class="wrapper">
     <nav class="header">
         <a href="${pageContext.request.contextPath}/home">MyPictures</a>
     </nav>
+    <canvas id="canvas"></canvas>
+    <script src="/General JS/graphScript.js"></script>
     <div class="login-container">
         <h1>Log In</h1>
         <%
@@ -36,9 +39,9 @@
             <input type="password" id="password" name="password" required placeholder="Password"><br>
             <input type="submit" value="Log In">
             <div class="remember-me">
-            <input type="checkbox" id="remember-me" name="rememberMe">
-            <label for="remember-me">Remember Me For A Month</label>
-        </div>
+                <input type="checkbox" id="remember-me" name="rememberMe">
+                <label for="remember-me">Remember Me For A Month</label>
+            </div>
         </form>
         <form action="${pageContext.request.contextPath}/register" method="get">
             <button type="submit">Sign Up</button>

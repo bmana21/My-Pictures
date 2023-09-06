@@ -11,6 +11,7 @@
     <title>MyPictures - Homepage</title>
     <link rel="stylesheet" type="text/css" href="/jsp/home/homePage.css">
     <link rel="stylesheet" type="text/css" href="/General CSS/ScrollBar.css">
+    <link rel="icon" type="image/png" href="/images/icon.png">
     <% User user = (User) session.getAttribute("user"); %>
     <% List<Album> albums = (List<Album>) request.getAttribute("albums"); %>
 </head>

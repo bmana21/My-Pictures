@@ -6,9 +6,12 @@
     <meta charset="UTF-8">
     <title>MyPictures - Sign Up</title>
     <link rel="stylesheet" type="text/css" href="/jsp/registration/registrationPage.css">
+    <link rel="icon" type="image/png" href="/images/icon.png">
 </head>
 <body>
 <div class="wrapper">
+    <canvas id="canvas"></canvas>
+    <script src="/General JS/graphScript.js"></script>
     <nav class="header">
         <a href="${pageContext.request.contextPath}/home">MyPictures</a>
     </nav>

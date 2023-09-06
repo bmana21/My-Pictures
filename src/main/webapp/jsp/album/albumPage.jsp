@@ -17,6 +17,7 @@
     %>
     <title>Album - <%=album.getName()%>
     </title>
+    <link rel="icon" type="image/png" href="/images/icon.png">
     <link rel="stylesheet" type="text/css" href="/jsp/album/albumPage.css">
     <link rel="stylesheet" type="text/css" href="/General CSS/ScrollBar.css">
 </head>

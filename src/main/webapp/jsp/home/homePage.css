@@ -22,12 +22,16 @@
 }
 
 html, body {
+    background-image: url('backGroundHome.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
     background-color: #f1f3f6;
     height: 100%;
 }
 
 .wrapper {
-    background-color: #f1f3f6;
+    background-color: rgba(241, 243, 246, 0);
     display: flex;
     flex-direction: column;
     min-height: 100vh;
@@ -64,27 +68,25 @@ html, body {
     }
 }
 .welcome{
-    background-color: #f1f3f6;
+    background-color: rgba(0, 0, 0, 0.6);
     padding: 10px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     font-family: Arial, sans-serif;
     font-size: 22px;
     line-height: 1.5;
-    color: #333;
+    color: #fcfcfc;
 }
 .description-from-type-label {
-    background-color: #f1f3f6;
+    background-color: rgba(0, 0, 0, 0.6);
     padding: 10px;
-    border-radius: 8px;
+    margin-bottom: 100px;
     font-family: Arial, sans-serif;
     font-size: 22px;
     line-height: 1.5;
-    color: #333;
+    color: #fcfcfc;
 }
 
 .all-albums {
-    background-color: #f1f3f6;
+    background-color: rgba(241, 243, 246, 0);
     display: grid;
     max-width: 100%;
     justify-content: center;

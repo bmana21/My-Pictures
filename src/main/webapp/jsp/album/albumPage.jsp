@@ -19,6 +19,7 @@
     </title>
     <link rel="icon" type="image/png" href="/images/icon.png">
     <link rel="stylesheet" type="text/css" href="/jsp/album/albumPage.css">
+    <link rel="stylesheet" type="text/css" href="/jsp/album/viewImage.css">
     <link rel="stylesheet" type="text/css" href="/General CSS/ScrollBar.css">
 </head>
 <body>
@@ -34,12 +35,14 @@
                 <div class="photo">
                     <img src="<%=GoogleCloudService.getPhotoURL(photo.getSaveName())%>">
                 </div>
-                <div class="overlay"></div>
+                <div class="overlay"
+                     onclick="viewImage('<%=GoogleCloudService.getPhotoURL(photo.getSaveName())%>')"></div>
                 <div class="delete">
                     <% String link = "/deletephoto?albumId=" + album.getAlbumId() + "&photoId=" + photo.getPhotoId(); %>
                     <a href="<%=link%>">Delete</a>
                 </div>
-                <div class="download"><a href="<%=GoogleCloudService.getPhotoURL(photo.getSaveName())%>"> Download </a>
+                <div class="download"><a href="<%=GoogleCloudService.getPhotoURL(photo.getSaveName())%>">
+                    Download </a>
                 </div>
             </div>
             <% } %>
@@ -62,7 +65,7 @@
 
         </div>
         <button onclick="openPopup()" class="delete-album-button"> Delete Album</button>
-        <div id="deletePopUp" class="delete-popUp">
+        <div id="deletePopUp" class="delete-popUp" onclick="closePopup()">
             <div class="delete-popUp-content">
                 <form action="${pageContext.request.contextPath}/deletealbum" method="get">
                     <p>Are you sure you want to delete this album? Note that all the photos from this album will be
@@ -74,17 +77,7 @@
                     </div>
                 </form>
             </div>
-            <script>
-                function openPopup() {
-                    var modal = document.getElementById("deletePopUp");
-                    modal.style.display = "block";
-                }
-
-                function closePopup() {
-                    var modal = document.getElementById("deletePopUp");
-                    modal.style.display = "none";
-                }
-            </script>
+            <script src="/jsp/album/script/albumPagePopupScript.js"></script>
 
         </div>
     </div>
@@ -132,6 +125,12 @@
             </div>
         </div>
     </div>
+    <div id="lightbox-container">
+        <div id="lightbox" class="show" onclick="collapseImage()"></div>
+        <div class="viewImage-container">
+            <img id="viewImage" src="/images/defaultImage.png">
+        </div>
+    </div>
     <footer class="footer">
         <div class="footer-content">
             <p>&copy; 2023 MyPictures. All rights reserved.</p>
@@ -139,74 +138,7 @@
         <p>Author: Beso Managadze</p>
     </footer>
 </div>
-<script>
-    window.addEventListener('scroll', function () {
-        var sidebar = document.querySelector('.sidebar');
-        var headerHeight = document.querySelector('.header').offsetHeight;
-        var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        if (scrollTop >= headerHeight) {
-            sidebar.style.marginTop = '0';
-        } else {
-            sidebar.style.marginTop = headerHeight - scrollTop + 'px';
-        }
-    });
-    var previews = document.getElementById("just-previews");
-    previews.style.display = 'none';
-    function previewFiles() {
-        var fileInput = document.getElementById('photos');
-        var imagePreview = document.getElementById('previewPhotosContainer');
-
-
-        imagePreview.innerHTML = '';
-        if (fileInput.files && fileInput.files.length > 0) {
-            previews.style.display = 'block';
-            for (var i = 0; i < fileInput.files.length; i++) {
-                var reader = new FileReader();
-                reader.onload = (function (index) {
-                    return function (e) {
-                        var container = document.createElement('div');
-                        container.className = 'photoContainer';
-                        var photo = document.createElement('img');
-                        photo.src = e.target.result;
-                        photo.className = 'preview-photo';
-                        var overlay = document.createElement('div');
-                        overlay.className = 'overlay';
-                        var deleteButton = document.createElement('div');
-                        deleteButton.className = 'delete';
-                        var deleteA = document.createElement('a');
-                        deleteA.textContent = 'Delete';
-                        deleteA.href = 'javascript:void(0)';
-                        deleteA.onclick = function () {
-                            removePhoto(index);
-                        };
-                        container.appendChild(photo);
-                        container.appendChild(overlay);
-                        deleteButton.appendChild(deleteA);
-                        container.appendChild(deleteButton);
-
-
-                        imagePreview.appendChild(container);
-                    };
-                })(i);
-                reader.readAsDataURL(fileInput.files[i]);
-            }
-        }
-        else previews.style.display = 'none';
-    }
-
-    function removePhoto(index) {
-        const dt = new DataTransfer();
-        const input = document.getElementById('photos');
-        const {files} = input;
-
-        for (let i = 0; i < files.length; i++) {
-            const file = files[i];
-            if (index !== i) dt.items.add(file);
-        }
-
-        input.files = dt.files;
-        previewFiles();
-    }
-</script>
+<script src="/jsp/album/script/albumPageScript.js"></script>
+<script src="/jsp/album/script/albumPageImageScript.js"></script>
 </body>
 </html>

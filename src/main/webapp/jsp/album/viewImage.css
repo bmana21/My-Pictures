@@ -1,4 +1,4 @@
-#lightbox-container{
+#lightbox-container {
     position: fixed;
     top: 0;
     left: 0;
@@ -28,17 +28,56 @@
     transition-delay: 0s;
 }
 
-#lightbox-container .viewImage-container{
+#lightbox-container .viewImage-container {
     display: flex;
+    position: relative;
     justify-content: center;
     align-items: center;
-    height: 100%;
-    width: 100%;
+    height: 90vh;
+    width: auto;
+    max-width: 90vw;
+
 }
 
-#lightbox-container img{
-    max-height: 90%;
-    max-width: 90%;
+#lightbox-container img {
+    height: auto;
+    width: auto;
+    max-height: 100%;
+    max-width: 100%;
     object-fit: contain;
     z-index: 3;
+}
+
+#lightbox-container .previous,
+#lightbox-container .next {
+    text-decoration: none;
+    display: inline-block;
+    border-radius: 50%;
+    padding: 8px 16px;
+    background-color: rgba(241, 241, 241, 0.46);
+    color: black;
+    font-size: 20px;
+    font-weight: bold;
+    visibility: hidden;
+    z-index: 4;
+}
+
+#lightbox-container .viewImage-container .next {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translate(-10%, -50%);
+}
+
+#lightbox-container .viewImage-container .previous {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translate(10%, -50%);
+}
+
+#lightbox-container .previous:hover,
+#lightbox-container .next:hover {
+    background-color: rgba(221, 221, 221, 0.91);
+    color: black;
 }

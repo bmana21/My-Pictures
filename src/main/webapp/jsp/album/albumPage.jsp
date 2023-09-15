@@ -30,13 +30,19 @@
     </nav>
     <div class="main-content">
         <div class="photo-gallery">
+            <% int index = 0;
+                int nPhotos = photos.size();
+            %>
             <% for (Photo photo : photos) { %>
             <div class="photo-container">
                 <div class="photo">
-                    <img src="<%=GoogleCloudService.getPhotoURL(photo.getSaveName())%>">
+                    <img id="photo_<%=photo.getPhotoId()%>"
+                         src="<%=GoogleCloudService.getPhotoURL(photo.getSaveName())%>">
+                    <div id="next_<%=photo.getPhotoId()%>"  style="display: none;"><%=photos.get((index+1)%nPhotos).getPhotoId()%></div>
+                    <div id="previous_<%=photo.getPhotoId()%>" style="display: none;"><%=photos.get((index-1+nPhotos)%nPhotos).getPhotoId()%></div>
                 </div>
                 <div class="overlay"
-                     onclick="viewImage('<%=GoogleCloudService.getPhotoURL(photo.getSaveName())%>')"></div>
+                     onclick="viewImage('<%=GoogleCloudService.getPhotoURL(photo.getSaveName())%>', <%=photo.getPhotoId()%>)"></div>
                 <div class="delete">
                     <% String link = "/deletephoto?albumId=" + album.getAlbumId() + "&photoId=" + photo.getPhotoId(); %>
                     <a href="<%=link%>">Delete</a>
@@ -45,7 +51,11 @@
                     Download </a>
                 </div>
             </div>
-            <% } %>
+
+            <%
+                    index++;
+                }
+            %>
 
         </div>
         <div class="upload-photo">
@@ -128,7 +138,9 @@
     <div id="lightbox-container">
         <div id="lightbox" class="show" onclick="collapseImage()"></div>
         <div class="viewImage-container">
-            <img id="viewImage" src="/images/defaultImage.png">
+            <a href="#" id="next" class="previous box" onclick="prevImage()">&#8249;</a>
+            <a href="#" id="previous" class="next box" onclick="nextImage()">&#8250;</a>
+            <img id="viewImage" class="box" src="/images/defaultImage.png">
         </div>
     </div>
     <footer class="footer">
